@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import { Component } from 'react';
 import './App.css';
@@ -6,17 +5,14 @@ import './App.css';
 class App extends Component {
 
 state ={
-  users:[]
+  person:null
 }
 
-componentDidMount(){
-  axios.get('https://jsonplaceholder.typicode.com/users')
-  .then (res => {
- const users = res.data;
-
- this.setState({users})
-  })
-
+async componentDidMount(){
+const url = 'https://api.randomuser.me/'
+const response = await fetch(url);
+const data = await response.json();
+this.setState({person:data.results[0]})
 }
 
 
@@ -24,13 +20,15 @@ componentDidMount(){
   render(){
   return (
     <div>
-      {this.state.users.map (user=>
-        <p key={ user.id}> {user.name}   
-        <span> {user.email} </span> 
-         <span>{user.address.street} </span> 
-         <span>{user.address.city} </span>
-         
-        </p>)}
+      {!this.state.person ? <p>Loading...</p> : 
+    <div>
+      <img src={this.state.person.picture.large} alt='pic' width='300px' />
+      <p>First Name:{this.state.person.name.first}</p>
+      <p>Last Name:{this.state.person.name.last}</p>
+      <p>Email: {this.state.person.email}</p>
+
+      </div> }
+
     
     </div>
   )}
